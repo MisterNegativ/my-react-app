@@ -1,7 +1,7 @@
 import React from "react";
 import './spinner.css'
 
-export default () => {
+const Spinner = () => {
     return (
         <div className="lds-css">
             <div></div>
@@ -9,3 +9,5 @@ export default () => {
         </div>
     )
 };
+
+export default Spinner;
