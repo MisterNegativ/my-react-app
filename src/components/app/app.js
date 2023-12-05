@@ -4,12 +4,14 @@ import Header from '../header'
 import RandomPlanet from '../random-planet'
 import ErrorButton from '../error-button';
 import ErrorIndicator from "../error-indicator";
+import Row from "../row/row";
 
 import './app.css'
 import PeoplePage from "../people-page";
 import ItemList from "../item-list";
-import PersonDetails from "../person-details";
+import ItemDetails, {Record} from "../item-details/item-details";
 import SwapiService from "../../services/swapi-service";     
+import ErrorBoundry from "../error-boundry";
 
 
 
@@ -17,8 +19,7 @@ export default class App extends Component{
     SwapiService = new SwapiService();
 
     state = {
-        showRandomPlanet: true,
-        hasError: false
+        showRandomPlanet: true
     };
 
     toggleRandomPlanet = () => {
@@ -27,53 +28,75 @@ export default class App extends Component{
         })
     };
 
-    componentDidCatch() {
-        this.setState({ hasError: true });
-    }
 
     render () {
+        // Если произошла ошибка, отобразить компонент ErrorIndicator
         if(this.state.hasError) return <ErrorIndicator/>;
 
+        // Определение, нужно ли отображать случайную планету
         const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
 
+        // Деструктуризация методов из swapiService для получения данных о персонаже и звездолете
+        const { getPerson,
+            getStarship,
+            getPersonImage,
+            getStarshipImage,
+            getAllPeople,
+            getAllPlanets } = this.swapiService;
+
+        // Определение деталей персонажа
+        const personDetails = <ItemDetails
+            itemId={11}
+            getData={getPerson}
+            getImageUrl={getPersonImage}
+        >
+            <Record field="gender" label="Gender"/>
+            <Record field="eyeColor" label="Eye Color"/>
+        </ItemDetails>;
+
+        // Определение деталей звездолета
+        const starshipDetails = <ItemDetails
+            itemId={5}
+            getData={getStarship}
+            getImageUrl={getStarshipImage}
+        >
+            <Record field="model" label="Model"/>
+            <Record field="length" label="Length"/>
+            <Record field="costInCredits" label="Cost"/>
+        </ItemDetails>;
+
+        // Возвращение JSX для отображения компонента
         return (
-            <div className='container-fluid'>
-                <div className="row">
-                    <div className="col-12">
-                        <Header />
-                        {planet}
-                        <button className='toggle-planet btn btn-warning btn-lg' onClick={this.toggleRandomPlanet}>
-                            Toggle Random Planet
-                        </button>
-                        <ErrorButton />
+            <ErrorBoundry>
+                {/* Открываем контейнер для содержимого */}
+                <div className='container-fluid'>
+                    {/* Начинаем строку для размещения элементов */}
+                    <div className="row">
+                        {/* Определяем полный столбец (ширина по всей странице) */}
+                        <div className="col-12">
+                            {/* Вставляем компонент Header */}
+                            <Header/>
+                        </div>
                     </div>
+                    {/* Рендеринг компонента ItemList для людей */}
+                    <ItemList
+                        getData={getAllPeople} // Передаем функцию для получения данных о людях
+                        onItemSelected={() => {}}> 
+
+                        { ({name}) => <span>{name}</span> }
+                    </ItemList>
+
+                    {/* Рендеринг компонента ItemList для планет */}
+                    <ItemList
+                        getData={getAllPlanets} // Передаем функцию для получения данных о планетах
+                        onItemSelected={() => {}}  // Пустая функция на выбор элемента
+                        >
+
+                        {/* Функция внутри ItemList, которая получает данные (в данном случае, объект с именем) и возвращает JSX */}
+                        { ({name}) => <span>{name}</span> }
+                    </ItemList>
                 </div>
-
-                <PeoplePage />
-                {/* <div className='row'>
-                    <div className='col-md-6'>
-                        <ItemList 
-                            onItemSelected = {this.onPersonSelected}
-                            getData = {this.SwapiService.getAllPlanets} 
-                            renderItem={(item) => (<span>{item.name}<button>!</button></span>)}/>
-                    </div>
-                    <div className='col-md-6'>
-                        <PersonDetails personId={this.state.selectedPerson} />
-                    </div>
-                    <div className='row'>
-                        <div className='col-md-6'>
-                            <ItemList
-                                onItemSelected={this.onPersonSelected}
-                                getData={this.SwapiService.getAllStarships} 
-                                renderItem={({ name, gender, birthYear }) => `${name} 5`}/>
-
-                        </div>
-                        <div className="col-md-6">
-                            <PersonDetails personId={this.state.selectedPerson} />
-                        </div>
-                    </div>
-                </div> */}
-            </div>
+            </ErrorBoundry>
         );
     }
 };
