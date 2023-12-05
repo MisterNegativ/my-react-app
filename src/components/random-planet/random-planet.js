@@ -2,11 +2,22 @@ import React, {Component} from "react";
 
 import SwapiService from '../../services/swapi-service';
 import Spinner from '../spinner';
+import PropTypes from 'prop-types';
 import ErrorIndicator from "../error-indicator";
 import './random-planet.css'
 
 export default class RandomPlanet extends Component {
+    static defaultProps = {
+        updateInterval: 60000
+    };
+
+    static propTypes = {
+        updateInterval: PropTypes.number
+    };
+
     swapiService = new SwapiService();
+
+
 
     state = {
         planet: {},
@@ -16,8 +27,9 @@ export default class RandomPlanet extends Component {
 
     componentDidMount() {
         this.updatePlanet();
-        this.interval = setInterval( this.updatePlanet, 60000 )
-    }
+        const {updateInterval} = this.props;
+        this.updatePlanet();
+        this.interval = setInterval( this.updatePlanet, updateInterval )    }
 
     componentWillUnmount() {
         clearInterval(this.interval)

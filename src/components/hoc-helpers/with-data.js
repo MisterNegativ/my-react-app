@@ -3,29 +3,50 @@ import Spinner from "../spinner";
 import ErrorIndicator from "../error-indicator";
 
 // Создаем HOC с двумя параметрами - View и getData
-const withData = (View, getData) => {
+const withData = (View) => {
     return class extends Component {
 
         state = {
-            data: null // Инициализируем состояние данных
+            data: null,
+            loading: true,
+            error: false // Инициализируем состояние данных
         };
 
+        componentDidUpdate(prevProps) {
+            if(this.props.getData !== prevProps.getData) {
+                this.update()
+            }
+        }
+
         componentDidMount() {
-            // Когда компонент монтируется, получаем данные и обновляем состояние
-            getData()
+            this.update()
+        }
+
+        update() {
+            this.setState({
+                loading: true,
+                error: false
+            });
+
+            this.props.getData()
                 .then( (data) => {
                     this.setState({
-                        data
+                        data,
+                        loading: false
                     })
-                })
+                }).catch( () => {
+                    this.setState({
+                        error: true,
+                        loading: false
+                    });
+            } )
         }
 
         render() {
-            const {data, error} = this.state;
-            // Если данные еще не загружены, показываем Spinner
-            if(!data) return <Spinner />;
-            // Если произошла ошибка при загрузке данных, показываем ErrorIndicator
-            if (error) return <ErrorIndicator />;
+            const {data, loading, error} = this.state;
+
+            if(loading) return <Spinner />;
+            if(error) return <ErrorIndicator />;
 
             // Иначе передаем полученные данные в оригинальный компонент View
             return <View {...this.props} data={data}/>;
