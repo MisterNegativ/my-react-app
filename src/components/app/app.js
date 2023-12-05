@@ -48,12 +48,14 @@ export default class App extends Component{
                         <ErrorButton />
                     </div>
                 </div>
+
                 <PeoplePage />
                 <div className='row'>
                     <div className='col-md-6'>
                         <ItemList 
                             onItemSelected = {this.onPersonSelected}
-                            getData = {this.SwapiService.getAllPlanets} />
+                            getData = {this.SwapiService.getAllPlanets} 
+                            renderItem={item => (<span>{item.name}<button>!</button></span>)}/>
                     </div>
                     <div className='col-md-6'>
                         <PersonDetails personId={this.state.selectedPerson} />
@@ -62,7 +64,8 @@ export default class App extends Component{
                         <div className='col-md-6'>
                             <ItemList
                                 onItemSelected={this.onPersonSelected}
-                                getData={this.SwapiService.getAllStarships} />
+                                getData={this.SwapiService.getAllStarships} 
+                                renderItem={item => item.name}/>
 
                         </div>
                         <div className="col-md-6">

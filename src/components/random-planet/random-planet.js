@@ -6,7 +6,7 @@ import ErrorIndicator from "../error-indicator";
 import './random-planet.css'
 
 export default class RandomPlanet extends Component {
-    SwapiService = new SwapiService();
+    swapiService = new SwapiService();
 
     state = {
         planet: {},
@@ -50,13 +50,13 @@ export default class RandomPlanet extends Component {
     
     render () {
         
-        const {planet, loading, error} = this.state;
+        const { planet, loading, error } = this.state;
 
         const errorMessage = error ? <ErrorIndicator /> : null;
 
         const spinner = loading ? <Spinner /> : null;
 
-        const content = hasData ? <PlanetView planet={planet} /> : null
+        const content = loading ? <PlanetView planet={planet} /> : null
 
 
         return (
