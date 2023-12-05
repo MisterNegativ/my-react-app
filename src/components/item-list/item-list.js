@@ -21,7 +21,7 @@ export default class ItemList extends Component {
             })
     }
 
-    renderItems = (arr) => {
+    renderItems(arr) {
         return arr.map(({item}) => {
             const {id} = item;
 
@@ -37,7 +37,7 @@ export default class ItemList extends Component {
                 </li>
             )
         });
-    };
+    }
 
     render () {
         const {itemList} = this.state
