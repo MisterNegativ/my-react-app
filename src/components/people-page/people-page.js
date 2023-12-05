@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './people-page.css';
 import ItemList from '../item-list';
+import SwapiService from '../../services/swapi-service';
 import ItemDetails from "../item-details";
 import Row from "../row";
 import ErrorBoundry from "../error-boundry";

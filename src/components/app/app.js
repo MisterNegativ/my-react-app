@@ -12,6 +12,7 @@ import ItemList from "../item-list";
 import ItemDetails, {Record} from "../item-details/item-details";
 import SwapiService from "../../services/swapi-service";     
 import ErrorBoundry from "../error-boundry";
+import {PersonList, PlanetList, StarshipList, PersonDetails, StarshipDetails, PlanetDetails} from "../sw-components";
 
 
 
@@ -37,33 +38,33 @@ export default class App extends Component{
         const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
 
         // Деструктуризация методов из swapiService для получения данных о персонаже и звездолете
-        const { getPerson,
-            getStarship,
-            getPersonImage,
-            getStarshipImage,
-            getAllPeople,
-            getAllPlanets } = this.swapiService;
+        // const { getPerson,
+        //     getStarship,
+        //     getPersonImage,
+        //     getStarshipImage,
+        //     getAllPeople,
+        //     getAllPlanets } = this.swapiService;
 
         // Определение деталей персонажа
-        const personDetails = <ItemDetails
-            itemId={11}
-            getData={getPerson}
-            getImageUrl={getPersonImage}
-        >
-            <Record field="gender" label="Gender"/>
-            <Record field="eyeColor" label="Eye Color"/>
-        </ItemDetails>;
+        // const personDetails = <ItemDetails
+        //     itemId={11}
+        //     getData={getPerson}
+        //     getImageUrl={getPersonImage}
+        // >
+        //     <Record field="gender" label="Gender"/>
+        //     <Record field="eyeColor" label="Eye Color"/>
+        // </ItemDetails>;
 
         // Определение деталей звездолета
-        const starshipDetails = <ItemDetails
-            itemId={5}
-            getData={getStarship}
-            getImageUrl={getStarshipImage}
-        >
-            <Record field="model" label="Model"/>
-            <Record field="length" label="Length"/>
-            <Record field="costInCredits" label="Cost"/>
-        </ItemDetails>;
+        // const starshipDetails = <ItemDetails
+        //     itemId={5}
+        //     getData={getStarship}
+        //     getImageUrl={getStarshipImage}
+        // >
+        //     <Record field="model" label="Model"/>
+        //     <Record field="length" label="Length"/>
+        //     <Record field="costInCredits" label="Cost"/>
+        // </ItemDetails>;
 
         // Возвращение JSX для отображения компонента
         return (
@@ -78,15 +79,24 @@ export default class App extends Component{
                             <Header/>
                         </div>
                     </div>
+
+                    <PersonDetails itemId={11} />
+                    <StarshipDetails itemId={5} />
+                    <PlanetDetails itemId={9} />
                     {/* Рендеринг компонента ItemList для людей */}
-                    <ItemList
-                        getData={getAllPeople} // Передаем функцию для получения данных о людях
-                        onItemSelected={() => {}}> 
-
+                    <PersonList>
                         { ({name}) => <span>{name}</span> }
-                    </ItemList>
+                    </PersonList>
 
-                    {/* Рендеринг компонента ItemList для планет */}
+                    <StarshipList>
+                        { ({name}) => <span>{name}</span> }
+                    </StarshipList>
+
+                    <PlanetList>
+                        { ({name}) => <span>{name}</span> }
+                    </PlanetList>
+
+                    {/* Рендеринг компонента ItemList для планет
                     <ItemList
                         getData={getAllPlanets} // Передаем функцию для получения данных о планетах
                         onItemSelected={() => {}}  // Пустая функция на выбор элемента
@@ -94,7 +104,7 @@ export default class App extends Component{
 
                         {/* Функция внутри ItemList, которая получает данные (в данном случае, объект с именем) и возвращает JSX */}
                         { ({name}) => <span>{name}</span> }
-                    </ItemList>
+                    {/* </ItemList>  */}
                 </div>
             </ErrorBoundry>
         );
